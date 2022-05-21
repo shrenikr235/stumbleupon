@@ -11,8 +11,14 @@ class Room(models.Model):
     updated = models.DateTimeField(auto_now=True) # take timestamp every time save is hit on the item
     created = models.DateTimeField(auto_now_add=True) # take timestamp when save is hit the first time i.e during creation
 
+ 
+    class Meta:
+        ordering = ["-updated", "-created"]
+
     def __str__(self):
         return self.name
+
+        
 
 class Topic(models.Model):
     # topic can have multiple rooms
@@ -23,7 +29,8 @@ class Topic(models.Model):
         return self.name
 
 
-    
+
+
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
