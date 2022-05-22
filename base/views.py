@@ -34,12 +34,18 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
+            return redirect("home")
 
         else:
             messages.error(request, "Username or password does not exist")
 
     context = {}
     return render(request, "base/login_register.html", context)
+
+def logout_user(request):
+    logout(request)
+    return redirect("home")
+
 
 def home(request):
     # return HttpResponse("Home Page") # without templates
