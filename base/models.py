@@ -7,7 +7,7 @@ class Room(models.Model):
     topic = models.ForeignKey("Topic", on_delete=models.SET_NULL, null=True) # Topic as a string since it's written below the Room class
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True) # field can be blank
-    # participants = 
+    participants = models.ManyToManyField(User, related_name = "participants", blank = True)
     updated = models.DateTimeField(auto_now=True) # take timestamp every time save is hit on the item
     created = models.DateTimeField(auto_now_add=True) # take timestamp when save is hit the first time i.e during creation
 
