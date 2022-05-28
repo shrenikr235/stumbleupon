@@ -92,7 +92,14 @@ def home(request):
 
     topics = Topic.objects.all()
     room_count = rooms.count()
-    context = {"rooms": rooms, "topics": topics, "room_count": room_count}
+
+    # recent activity feature
+    # room_messages = Message.objects.all()
+    room_messages = Message.objects.filter(Q(room__topic__name__icontains = q)) # filter by room name
+
+
+
+    context = {"rooms": rooms, "topics": topics, "room_count": room_count, "room_messages": room_messages}
     return render(request, "base/home.html", context) 
 
 def room(request, pk):
@@ -103,7 +110,7 @@ def room(request, pk):
 
     room = Room.objects.get(id=pk)
     # chatroom messages CRUD
-    room_messages = room.message_set.all().order_by("-created") # query child objects of speific room
+    room_messages = room.message_set.all() # query child objects of speific room
 
     participants = room.participants.all()
 
