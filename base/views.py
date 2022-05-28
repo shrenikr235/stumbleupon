@@ -11,6 +11,9 @@ from django.contrib.auth import authenticate, login, logout
 # restricting pages
 from django.contrib.auth.decorators import login_required
 
+# user registration
+from django.contrib.auth.forms import UserCreationForm
+
 # rooms = [
 #     {"id":1, "name":"Learn JavaScript"},
 #     {"id":2, "name":"German A1 classes for beginners"},
@@ -24,12 +27,15 @@ queryset = ModelName.objects.all()
 """
 
 def login_page(request):
+
+    page = "login"
+
     if request.user.is_authenticated:
         return redirect("home")
 
 
     if request.method == "POST":
-        username = request.POST.get("username")
+        username = request.POST.get("username").lower()
         password = request.POST.get("password")
 
         try:
@@ -46,12 +52,32 @@ def login_page(request):
         else:
             messages.error(request, "Username or password does not exist")
 
-    context = {}
+    context = {"page": page}
     return render(request, "base/login_register.html", context)
 
 def logout_user(request):
     logout(request)
     return redirect("home")
+
+def register_page(request):
+    # page = "register"
+    form = UserCreationForm()
+
+    # process form request
+    if request.method == "POST":
+        form = UserCreationForm(request.POST) # credentials entered
+        if form.is_valid():
+            # process user if form is valid
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect("home")
+        # if something screws up
+        else:
+            messages.error(request, "Error occured while registering")
+    
+    return render(request, "base/login_register.html", {"form": form})
 
 
 def home(request):
