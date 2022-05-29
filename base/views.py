@@ -1,3 +1,4 @@
+from pydoc import describe
 from urllib.request import Request
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -141,34 +142,43 @@ def user_profile(request, pk):
 @login_required(login_url="login") # restrict to logged in users only
 def create_room(request):
     form = RoomForm()
+    topics = Topic.objects.all()
     if request.method == "POST": # post data
-        form = RoomForm(request.POST) # add data to the form 
-        if form.is_valid(): # check if it is valid
-            room = form.save(commit = False)
-            room.host = request.user # host added based on logged in user
-            room.save()
-            form.save() # save if true
-            return redirect("home") # redirect to homepage
+        topic_name = request.POST.get("topic")
+        # created is a boolean value
+        topic, created = Topic.objects.get_or_create(name = topic_name)
+        
+        Room.objects.create(
+            host = request.user,
+            topic = topic,
+            name = request.POST.get("name"),
+            description = request.POST.get("description"),
+        )
+        return redirect("home") # redirect to homepage
 
 
-    context = {"form": form}
+    context = {"form": form, "topics": topics}
     return render(request, "base/room_form.html", context)
 
 @login_required(login_url="login")
 def update_room(request, pk):
     room = Room.objects.get(id=pk)
     form = RoomForm(instance=room)
-
+    topics = Topic.objects.all()
     if request.user != room.host:
         return HttpResponse("You don't have sufficient permissions to view this.")
 
     if request.method == "POST":
-        form = RoomForm(request.POST, instance=room)
-        if form.is_valid():
-            form.save()
-            return redirect("home")
+        topic_name = request.POST.get("topic")
+        # created is a boolean value
+        topic, created = Topic.objects.get_or_create(name = topic_name)
+        room.name = request.POST.get("name")
+        room.topic = topic
+        room.description = request.POST.get("description")
+        room.save()
+        return redirect("home")
 
-    context = {"form" : form}
+    context = {"form" : form, "topics": topics, "room": room}
     return render(request, "base/room_form.html", context)
 
 
