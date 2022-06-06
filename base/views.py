@@ -2,10 +2,9 @@ from pydoc import describe
 from urllib.request import Request
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Room, Topic, Message
-from .forms import RoomForm, UserForm
+from .models import Room, Topic, Message, User
+from .forms import RoomForm, UserForm, MyUserCreationForm
 from django.db.models import Q
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 
@@ -13,7 +12,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 # user registration
-from django.contrib.auth.forms import UserCreationForm
 
 # rooms = [
 #     {"id":1, "name":"Learn JavaScript"},
@@ -36,15 +34,15 @@ def login_page(request):
 
 
     if request.method == "POST":
-        username = request.POST.get("username").lower()
+        email = request.POST.get("email").lower()
         password = request.POST.get("password")
 
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(email=email)
         except:
             messages.error(request, "User does not exist")
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
             login(request, user)
@@ -62,11 +60,11 @@ def logout_user(request):
 
 def register_page(request):
     # page = "register"
-    form = UserCreationForm()
+    form = MyUserCreationForm()
 
     # process form request
     if request.method == "POST":
-        form = UserCreationForm(request.POST) # credentials entered
+        form = MyUserCreationForm(request.POST) # credentials entered
         if form.is_valid():
             # process user if form is valid
             user = form.save(commit=False)
@@ -213,7 +211,7 @@ def update_user(request):
     form = UserForm(instance = user)
 
     if request.method == "POST":
-        form = UserForm(request.POST, instance = user)
+        form = UserForm(request.POST, request.FILES, instance = user)
         if form.is_valid():
             form.save()
             return redirect("user-profile", pk = user.id)
