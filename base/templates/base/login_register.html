@@ -10,13 +10,13 @@
             </div>
           </div>
           <div class="layout__body">
-            <h2 class="auth__tagline">Find your study partner</h2>
+            <h2 class="auth__tagline">Discover interesting people!</h2>
 
             <form class="form" action="" method="POST">
               {% csrf_token %}
               <div class="form__group form__group">
                 <label for="room_name">Email</label>
-                <input id="username" name="email" type="text" placeholder="e.g. dennis_ivy" />
+                <input id="username" name="email" type="text" placeholder="test@example.com" />
               </div>
               <div class="form__group">
                 <label for="password">Password</label>
@@ -50,7 +50,7 @@
             </form>
 
             <div class="auth__action">
-              <p>Haven't signed up yet?</p>
+              <p>Not a member yet?</p>
               <a href="{% url 'register' %}" class="btn btn--link">Sign Up</a>
             </div>
           </div>
@@ -65,7 +65,7 @@
             </div>
           </div>
           <div class="layout__body">
-            <h2 class="auth__tagline">Find your study partner</h2>
+            <h2 class="auth__tagline">Discover interesting people!</h2>
 
             <form class="form" action="" method="POST">
               {% csrf_token %}

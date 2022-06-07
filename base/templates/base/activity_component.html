@@ -1,6 +1,6 @@
 <div class="activities">
     <div class="activities__header">
-      <h2>Recent Activities</h2>
+      <h2>Recent Activity</h2>
     </div>
     {% for message in room_messages %}
     <div class="activities__box">
@@ -10,7 +10,7 @@
             <img src="{{message.user.avatar.url}}" />
           </div>
           <p>
-            @{{ message.user }}
+            @{{ message.user.username }}
             <span>{{ message.created | timesince }} ago</span>
           </p>
         </a>
@@ -29,10 +29,9 @@
 
       </div>
       <div class="activities__boxContent">
-        <p>replied to post “<a href="{% url 'room' message.room.id %}">{{ message.room}}</a>”</p>
+        <p>replied in "<a href="{% url 'room' message.room.id %}">{{ message.room}}</a>"</p>
         <div class="activities__boxRoomContent">
-          {{ message}}
-          <!-- {{ message.body }}-->
+          {{ message }}
         </div>
       </div>
     </div>
