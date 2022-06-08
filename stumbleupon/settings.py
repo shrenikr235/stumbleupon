@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-0cb3nq%-oo=8i&vcej9q6n=@uqcc1e^zq-@b&n7j)-u0!&^8wh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['shrenikr235.pythonanywhere.com']
+ALLOWED_HOSTS = ['shrenikr235.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -46,10 +46,8 @@ AUTH_USER_MODEL = "base.User"
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-
-
-
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', #add whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'stumbleupon.wsgi.application'
+# WSGI_APPLICATION = 'stumbleupon.wsgi.application'
 
 
 # Database
